@@ -20,6 +20,9 @@
 //  --------------------------------------------------------------------------------------------------------------------
 #endregion
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Raven.Client.Revisions
 {
 	using System;
@@ -35,5 +38,20 @@ namespace Raven.Client.Revisions
 			string revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
 			return documentSession.Load<T>(revisionDocId);
 		}
+
+	    public static Task<T> LoadRevision<T>(this IAsyncDocumentSession session, string id, int revision, CancellationToken ct = default(CancellationToken))
+	    {
+	        if (session == null)
+	        {
+	            throw new ArgumentNullException(nameof(session));
+	        }
+	        if (id == null)
+	        {
+	            throw new ArgumentNullException(nameof(id));
+	        }
+            var revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
+
+	        return session.LoadAsync<T>(revisionDocId, ct);
+	    }
 	}
 }

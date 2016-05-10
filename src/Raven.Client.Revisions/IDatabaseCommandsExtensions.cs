@@ -20,6 +20,10 @@
 //  --------------------------------------------------------------------------------------------------------------------
 #endregion
 
+using System.Threading;
+using System.Threading.Tasks;
+using Raven.Client.Connection.Async;
+
 namespace Raven.Client.Revisions
 {
 	using System;
@@ -35,5 +39,22 @@ namespace Raven.Client.Revisions
 			string revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
 			databaseCommands.Delete(revisionDocId, etag);
 		}
+
+	    public static Task DeleteRevision(this IAsyncDatabaseCommands databaseCommands, string id, int revision,
+	        Guid? etag = default(Guid?), CancellationToken ct = default(CancellationToken))
+	    {
+	        if (databaseCommands == null)
+	        {
+	            throw new ArgumentNullException(nameof(databaseCommands));
+	        }
+	        if (id == null)
+	        {
+	            throw new ArgumentNullException(nameof(id));
+	        }
+
+            var revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
+
+	        return databaseCommands.DeleteAsync(revisionDocId, etag, ct);
+	    }
 	}
 }

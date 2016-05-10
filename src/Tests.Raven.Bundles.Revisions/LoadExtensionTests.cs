@@ -20,10 +20,12 @@
 //  --------------------------------------------------------------------------------------------------------------------
 #endregion
 
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Tests.Raven.Bundles.Revisions
 {
 	using System;
-	using Moq;
 	using Xunit;
 	using global::Raven.Client;
 	using global::Raven.Client.Revisions;
@@ -31,19 +33,10 @@ namespace Tests.Raven.Bundles.Revisions
 	public class LoadExtensionTests
 	{
 		[Fact]
-		public void When_session_is_null_Then_should_throw()
+		public Task When_session_is_null_Then_should_throw()
 		{
-			IDocumentSession session = null;
-			Assert.Throws<InvalidOperationException>(() => session.LoadRevision<RevisionedDocument>("key", 1));
-		}
-
-		[Fact]
-		public void When_LoadRevision_Then_should_call_Load_with_revision_key()
-		{
-			var mockSession = new Mock<IDocumentSession>();
-			mockSession.Setup(m => m.Load<RevisionedDocument>("key/revision/1"));
-			mockSession.Object.LoadRevision<RevisionedDocument>("key", 1);
-			mockSession.VerifyAll();
+			IAsyncDocumentSession session = null;
+			return Assert.ThrowsAsync<ArgumentNullException>(() => session.LoadRevision<RevisionedDocument>("key", 1));
 		}
 	}
 }

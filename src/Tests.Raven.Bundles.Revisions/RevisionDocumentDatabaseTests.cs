@@ -20,12 +20,13 @@
 //  --------------------------------------------------------------------------------------------------------------------
 #endregion
 
+using System.Threading.Tasks;
 using Raven.Abstractions.Exceptions;
+using Raven.Client;
 
 namespace Tests.Raven.Bundles.Revisions
 {
 	using System;
-	using System.Linq;
 	using Xunit;
 	using global::Raven.Bundles.Revisions;
 	using global::Raven.Client.Embedded;
@@ -35,134 +36,147 @@ namespace Tests.Raven.Bundles.Revisions
 	{
 		private readonly EmbeddableDocumentStore _documentStore;
 
-		public RevisionDocumentDatabaseTests()
-		{
-			_documentStore = new EmbeddableDocumentStore
-			{
-				RunInMemory = true,
-			};
-			_documentStore.Configuration.RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true;
-			_documentStore.Initialize();
-			_documentStore.DocumentDatabase.PutTriggers.Add(new RevisionDocumentPutTrigger { Database = _documentStore.DocumentDatabase });
-			_documentStore.DocumentDatabase.ReadTriggers.Add(new HideRevisionDocumentsFromIndexingReadTrigger { Database = _documentStore.DocumentDatabase });
-		}
+	    public RevisionDocumentDatabaseTests()
+	    {
+	        _documentStore = new EmbeddableDocumentStore
+	        {
+	            RunInMemory = true,
+	            Configuration =
+	            {
+	                RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
+	            }
+	        };
 
-		[Fact]
-		public void When_save_revisioned_document_Then_should_be_able_to_load_revision()
+	        _documentStore.Initialize();
+
+	        _documentStore.DocumentDatabase.PutTriggers.Add(new RevisionDocumentPutTrigger
+	        {
+	            Database = _documentStore.DocumentDatabase
+	        });
+	        _documentStore.DocumentDatabase.ReadTriggers.Add(new HideRevisionDocumentsFromIndexingReadTrigger
+	        {
+	            Database = _documentStore.DocumentDatabase
+	        });
+	    }
+
+	    [Fact]
+		public async Task When_save_revisioned_document_Then_should_be_able_to_load_revision()
 		{
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
 				var doc = new RevisionedDocument { Id = "key", Revision = 1 };
-				session.Store(doc);
-				session.SaveChanges();
+				await session.StoreAsync(doc);
+				await session.SaveChangesAsync();
 			}
 
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
-				var doc = session.LoadRevision<RevisionedDocument>("key", 1);
+				var doc = await session.LoadRevision<RevisionedDocument>("key", 1);
 				Assert.NotNull(doc);
 			}
 		}
 
 		[Fact]
-		public void When_save_revisioned_document_second_time_without_changing_version_Then_should_update_versioned_copy()
+		public async Task When_save_revisioned_document_second_time_without_changing_version_Then_should_update_versioned_copy()
 		{
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
 				var doc = new RevisionedDocument { Id = "key", Revision = 1, Data = "Alpha" };
-				session.Store(doc);
-				session.SaveChanges();
+				await session.StoreAsync(doc);
+				await session.SaveChangesAsync();
 			}
 
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
-				var doc = session.Load<RevisionedDocument>("key");
+				var doc = await session.LoadAsync<RevisionedDocument>("key");
 				doc.Data = "Beta";
-				session.SaveChanges();
+				await session.SaveChangesAsync();
 			}
 
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
-				var doc = session.Load<RevisionedDocument>("key");
+				var doc = await session.LoadAsync<RevisionedDocument>("key");
 				Assert.Equal("Beta", doc.Data);
 			}
 
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
-				var doc = session.LoadRevision<RevisionedDocument>("key", 1);
+				var doc = await session.LoadRevision<RevisionedDocument>("key", 1);
 				Assert.Equal("Beta", doc.Data);
 			}
 		}
 
 		[Fact]
-		public void When_query_Then_revisioned_document_is_not_returned()
+		public async Task When_query_Then_revisioned_document_is_not_returned()
 		{
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
 				var doc = new RevisionedDocument { Id = "key", Revision = 1, Data = "Alpha" };
-				session.Store(doc);
-				session.SaveChanges();
+				await session.StoreAsync(doc);
+				await session.SaveChangesAsync();
 			}
 
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
-				RevisionedDocument[] myVersionedDocuments = session.Query<RevisionedDocument>().Customize(q => q.WaitForNonStaleResults()).ToArray();
-				Assert.Equal(1, myVersionedDocuments.Length);
+			    var myVersionedDocuments =
+			        await session.Query<RevisionedDocument>().Customize(q => q.WaitForNonStaleResults()).ToListAsync();
+
+				Assert.Equal(1, myVersionedDocuments.Count);
 				Assert.Equal("key", myVersionedDocuments[0].Id);
 			}
 		}
 
 		[Fact]
-		public void When_save_non_revisioned_document_and_load_revision_Then_should_get_null()
+		public async Task When_save_non_revisioned_document_and_load_revision_Then_should_get_null()
 		{
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
 				var doc = new NonRevisionedDocument { Id = "key", Data = "Alpha" };
-				session.Store(doc);
-				session.SaveChanges();
+				await session.StoreAsync(doc);
+				await session.SaveChangesAsync();
 			}
 
 
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
-				var doc = session.LoadRevision<NonRevisionedDocument>("key", 1);
+				var doc = await session.LoadRevision<NonRevisionedDocument>("key", 1);
 				Assert.Null(doc);
 			}
 		}
 
 		[Fact]
-		public void When_saving_a_modified_revision_document_Then_should_throw()
+		public async Task When_saving_a_modified_revision_document_Then_should_throw()
 		{
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
 				var doc = new RevisionedDocument { Id = "key", Revision = 1, Data = "Alpha" };
-				session.Store(doc);
-				session.SaveChanges();
+				await session.StoreAsync(doc);
+				await session.SaveChangesAsync();
 			}
 
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
-				var doc = session.LoadRevision<RevisionedDocument>("key", 1);
+				var doc = await session.LoadRevision<RevisionedDocument>("key", 1);
 				doc.Data = "Beta";
-				Assert.Throws<OperationVetoedException>(() => session.SaveChanges());
+				await Assert.ThrowsAsync<OperationVetoedException>(() => session.SaveChangesAsync());
 			}
 		}
 
 		[Fact]
-		public void When_delete_revision_and_load_Then_should_get_null()
+		public async Task When_delete_revision_and_load_Then_should_get_null()
 		{
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
 				var doc = new RevisionedDocument { Id = "key", Revision = 1, Data = "Alpha" };
-				session.Store(doc);
-				session.SaveChanges();
+				await session.StoreAsync(doc);
+				await session.SaveChangesAsync();
 			}
 
-			_documentStore.DatabaseCommands.DeleteRevision("key", 1, null);
+			await _documentStore.AsyncDatabaseCommands.DeleteRevision("key", 1, null);
 
-			using (var session = _documentStore.OpenSession())
+			using (var session = _documentStore.OpenAsyncSession())
 			{
-				Assert.Null(session.LoadRevision<RevisionedDocument>("key", 1));
+				Assert.Null(await session.LoadRevision<RevisionedDocument>("key", 1));
 			}
 		}
 
