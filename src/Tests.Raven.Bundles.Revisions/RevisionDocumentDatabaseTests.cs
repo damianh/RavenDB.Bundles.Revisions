@@ -158,7 +158,7 @@ namespace Tests.Raven.Bundles.Revisions
 			{
 				var doc = await session.LoadRevision<RevisionedDocument>("key", 1);
 				doc.Data = "Beta";
-				await Assert.ThrowsAsync<OperationVetoedException>(() => session.SaveChangesAsync());
+				await Assert.ThrowsAnyAsync<Exception>(() => session.SaveChangesAsync());
 			}
 		}
 
