@@ -31,6 +31,7 @@ namespace Raven.Client.Revisions
 
 	public static class IDocumentSessionExtensions
 	{
+        [Obsolete]
 		public static T LoadRevision<T>(this IDocumentSession documentSession, string id, int revision)
 		{
 			Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(id));

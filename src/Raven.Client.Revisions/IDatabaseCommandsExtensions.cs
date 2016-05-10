@@ -32,7 +32,8 @@ namespace Raven.Client.Revisions
 
 	public static class IDatabaseCommandsExtensions
 	{
-		public static void DeleteRevision(this IDatabaseCommands databaseCommands, string id, int revision, Guid? etag)
+        [Obsolete]
+        public static void DeleteRevision(this IDatabaseCommands databaseCommands, string id, int revision, Guid? etag)
 		{
 			Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(id));
 			Guard.Against(databaseCommands == null, () => new InvalidOperationException("session is null"));
