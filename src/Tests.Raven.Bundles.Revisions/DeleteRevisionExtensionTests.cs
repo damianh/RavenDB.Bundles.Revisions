@@ -20,30 +20,24 @@
 //  --------------------------------------------------------------------------------------------------------------------
 #endregion
 
+using System.Threading;
+using System.Threading.Tasks;
+using Raven.Client.Connection.Async;
+
 namespace Tests.Raven.Bundles.Revisions
 {
 	using System;
-	using Moq;
 	using Xunit;
-	using global::Raven.Client.Connection;
 	using global::Raven.Client.Revisions;
 
 	public class DeleteRevisionExtensionTests
 	{
 		[Fact]
-		public void When_session_is_null_Then_should_throw()
+		public Task When_session_is_null_Then_should_throw()
 		{
-			IDatabaseCommands databaseCommands = null;
-			Assert.Throws<InvalidOperationException>(() => databaseCommands.DeleteRevision("key", 1, null));
+			IAsyncDatabaseCommands databaseCommands = null;
+			return Assert.ThrowsAsync<ArgumentNullException>(() => databaseCommands.DeleteRevision("key", 1));
 		}
 
-		[Fact]
-		public void When_Delete_Then_should_call_Delete_with_revision_key()
-		{
-			var mockDatabaseCommands = new Mock<IDatabaseCommands>();
-			mockDatabaseCommands.Setup(m => m.Delete("key/revision/1", null));
-			mockDatabaseCommands.Object.DeleteRevision("key", 1, null);
-			mockDatabaseCommands.VerifyAll();
-		}
 	}
 }

@@ -53,8 +53,10 @@ namespace Raven.Bundles.Revisions
 			using (Database.DisableAllTriggersForCurrentThread())
 			{
 				var revisionCopy = new RavenJObject(document);
-				string revisionkey = key + RevisionSegment + versionToken.Value<int>();
-				Database.Put(revisionkey, null, revisionCopy, metadata, transactionInformation);
+
+                var revisionkey = key + RevisionSegment + versionToken.Value<int>();
+
+                Database.TransactionalStorage.Batch(storage => storage.Documents.AddDocument(revisionkey, null, revisionCopy, metadata));
 			}
 		}
 	}

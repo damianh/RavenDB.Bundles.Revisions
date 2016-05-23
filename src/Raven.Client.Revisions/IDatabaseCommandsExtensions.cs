@@ -20,6 +20,10 @@
 //  --------------------------------------------------------------------------------------------------------------------
 #endregion
 
+using System.Threading;
+using System.Threading.Tasks;
+using Raven.Client.Connection.Async;
+
 namespace Raven.Client.Revisions
 {
 	using System;
@@ -28,12 +32,30 @@ namespace Raven.Client.Revisions
 
 	public static class IDatabaseCommandsExtensions
 	{
-		public static void DeleteRevision(this IDatabaseCommands databaseCommands, string id, int revision, Guid? etag)
+        [Obsolete]
+        public static void DeleteRevision(this IDatabaseCommands databaseCommands, string id, int revision, Guid? etag)
 		{
 			Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(id));
 			Guard.Against(databaseCommands == null, () => new InvalidOperationException("session is null"));
 			string revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
 			databaseCommands.Delete(revisionDocId, etag);
 		}
+
+	    public static Task DeleteRevision(this IAsyncDatabaseCommands databaseCommands, string id, int revision,
+	        Guid? etag = default(Guid?), CancellationToken ct = default(CancellationToken))
+	    {
+	        if (databaseCommands == null)
+	        {
+	            throw new ArgumentNullException(nameof(databaseCommands));
+	        }
+	        if (id == null)
+	        {
+	            throw new ArgumentNullException(nameof(id));
+	        }
+
+            var revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
+
+	        return databaseCommands.DeleteAsync(revisionDocId, etag, ct);
+	    }
 	}
 }
