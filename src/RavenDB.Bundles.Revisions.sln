@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raven.Bundles.Revisions", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raven.Client.Revisions", "Raven.Client.Revisions\Raven.Client.Revisions.csproj", "{9143729F-94F3-4E6B-A1ED-F9B4732B6D56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Raven.Bundles.Revisions", "Tests.Raven.Bundles.Revisions\Tests.Raven.Bundles.Revisions.csproj", "{C34FF5DE-E95A-4E4B-8727-17A091206091}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raven.Bundles.Revisions.Tests", "Raven.Bundles.Revisions.Tests\Raven.Bundles.Revisions.Tests.csproj", "{C34FF5DE-E95A-4E4B-8727-17A091206091}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3E15F82A-0EDB-476E-9780-55A84FA45B9C}"
 	ProjectSection(SolutionItems) = preProject
