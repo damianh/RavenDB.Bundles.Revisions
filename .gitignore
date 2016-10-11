@@ -8,3 +8,4 @@ src/packages/
 *.user
 *.dotCover
 build/
+_NCrunch_*
