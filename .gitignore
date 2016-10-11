@@ -7,6 +7,5 @@ _ReSharper.*/
 src/packages/
 *.user
 *.dotCover
-build/
 _NCrunch_*
-artrifacts
+artifacts
