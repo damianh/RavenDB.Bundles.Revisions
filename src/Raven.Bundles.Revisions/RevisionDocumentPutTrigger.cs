@@ -1,4 +1,5 @@
 ﻿#region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="RevisionDocumentPutTrigger.cs">
 // 	Copyright © 2012 Damian Hickey
@@ -18,46 +19,50 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
+
 #endregion
 
 namespace Raven.Bundles.Revisions
 {
-	using System.Diagnostics.Contracts;
-	using Abstractions.Data;
-	using Database.Plugins;
-	using Json.Linq;
+    using System.Diagnostics.Contracts;
+    using Raven.Abstractions.Data;
+    using Raven.Database.Plugins;
+    using Raven.Json.Linq;
 
-	public class RevisionDocumentPutTrigger : AbstractPutTrigger
-	{
-		internal const string RevisionSegment = "/revision/";
+    public class RevisionDocumentPutTrigger : AbstractPutTrigger
+    {
+        internal const string RevisionSegment = "/revision/";
 
-		public override VetoResult AllowPut(string key,
-		                                    RavenJObject document,
-		                                    RavenJObject metadata,
-		                                    TransactionInformation transactionInformation)
-		{
-			return key.Contains(RevisionSegment) ? VetoResult.Deny("Cannot modify a revision document") : VetoResult.Allowed;
-		}
+        public override VetoResult AllowPut(string key,
+            RavenJObject document,
+            RavenJObject metadata,
+            TransactionInformation transactionInformation)
+        {
+            return key.Contains(RevisionSegment)
+                ? VetoResult.Deny("Cannot modify a revision document")
+                : VetoResult.Allowed;
+        }
 
-		public override void OnPut(string key,
-		                           RavenJObject document,
-		                           RavenJObject metadata,
-		                           TransactionInformation transactionInformation)
-		{
-			Contract.Assume(!string.IsNullOrWhiteSpace(key));
-			RavenJToken versionToken;
-			if (!document.TryGetValue("Revision", out versionToken) || key.Contains(RevisionSegment))
-			{
-				return;
-			}
-			using (Database.DisableAllTriggersForCurrentThread())
-			{
-				var revisionCopy = new RavenJObject(document);
+        public override void OnPut(string key,
+            RavenJObject document,
+            RavenJObject metadata,
+            TransactionInformation transactionInformation)
+        {
+            Contract.Assume(!string.IsNullOrWhiteSpace(key));
+            RavenJToken versionToken;
+            if (!document.TryGetValue("Revision", out versionToken) || key.Contains(RevisionSegment))
+            {
+                return;
+            }
+            using (Database.DisableAllTriggersForCurrentThread())
+            {
+                var revisionCopy = new RavenJObject(document);
 
                 var revisionkey = key + RevisionSegment + versionToken.Value<int>();
 
-                Database.TransactionalStorage.Batch(storage => storage.Documents.AddDocument(revisionkey, null, revisionCopy, metadata));
-			}
-		}
-	}
+                Database.TransactionalStorage.Batch(
+                    storage => storage.Documents.AddDocument(revisionkey, null, revisionCopy, metadata));
+            }
+        }
+    }
 }

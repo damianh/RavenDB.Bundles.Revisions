@@ -1,4 +1,5 @@
 #region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="NonRevisionedDocument.cs">
 // Copyright © 2012 Damian Hickey
@@ -18,14 +19,15 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
+
 #endregion
 
 namespace Tests.Raven.Bundles.Revisions
 {
-	public class NonRevisionedDocument
-	{
-		public string Id { get; set; }
+    public class NonRevisionedDocument
+    {
+        public string Id { get; set; }
 
-		public string Data { get; set; }
-	}
+        public string Data { get; set; }
+    }
 }

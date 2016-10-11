@@ -1,4 +1,5 @@
 ﻿#region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="IDocumentSessionExtensions.cs">
 // 	Copyright © 2012 Damian Hickey
@@ -18,41 +19,31 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
-#endregion
 
-using System.Threading;
-using System.Threading.Tasks;
+#endregion
 
 namespace Raven.Client.Revisions
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using Client;
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
 
-	public static class IDocumentSessionExtensions
-	{
-        [Obsolete]
-		public static T LoadRevision<T>(this IDocumentSession documentSession, string id, int revision)
-		{
-			Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(id));
-			Guard.Against(documentSession == null, () => new InvalidOperationException("documentSession is null"));
-			string revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
-			return documentSession.Load<T>(revisionDocId);
-		}
-
-	    public static Task<T> LoadRevision<T>(this IAsyncDocumentSession session, string id, int revision, CancellationToken ct = default(CancellationToken))
-	    {
-	        if (session == null)
-	        {
-	            throw new ArgumentNullException(nameof(session));
-	        }
-	        if (id == null)
-	        {
-	            throw new ArgumentNullException(nameof(id));
-	        }
+    public static class IDocumentSessionExtensions
+    {
+        public static Task<T> LoadRevision<T>(this IAsyncDocumentSession session, string id, int revision,
+            CancellationToken ct = default(CancellationToken))
+        {
+            if (session == null)
+            {
+                throw new ArgumentNullException(nameof(session));
+            }
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
             var revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
 
-	        return session.LoadAsync<T>(revisionDocId, ct);
-	    }
-	}
+            return session.LoadAsync<T>(revisionDocId, ct);
+        }
+    }
 }

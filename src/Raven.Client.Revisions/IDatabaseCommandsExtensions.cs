@@ -1,4 +1,5 @@
 #region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="IDatabaseCommandsExtensions.cs">
 // 	Copyright © 2012 Damian Hickey
@@ -18,44 +19,33 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
-#endregion
 
-using System.Threading;
-using System.Threading.Tasks;
-using Raven.Client.Connection.Async;
+#endregion
 
 namespace Raven.Client.Revisions
 {
-	using System;
-	using System.Diagnostics.Contracts;
-	using Connection;
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Raven.Client.Connection.Async;
 
-	public static class IDatabaseCommandsExtensions
-	{
-        [Obsolete]
-        public static void DeleteRevision(this IDatabaseCommands databaseCommands, string id, int revision, Guid? etag)
-		{
-			Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(id));
-			Guard.Against(databaseCommands == null, () => new InvalidOperationException("session is null"));
-			string revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
-			databaseCommands.Delete(revisionDocId, etag);
-		}
-
-	    public static Task DeleteRevision(this IAsyncDatabaseCommands databaseCommands, string id, int revision,
-	        Guid? etag = default(Guid?), CancellationToken ct = default(CancellationToken))
-	    {
-	        if (databaseCommands == null)
-	        {
-	            throw new ArgumentNullException(nameof(databaseCommands));
-	        }
-	        if (id == null)
-	        {
-	            throw new ArgumentNullException(nameof(id));
-	        }
+    public static class IDatabaseCommandsExtensions
+    {
+        public static Task DeleteRevision(this IAsyncDatabaseCommands databaseCommands, string id, int revision,
+            Guid? etag = default(Guid?), CancellationToken ct = default(CancellationToken))
+        {
+            if (databaseCommands == null)
+            {
+                throw new ArgumentNullException(nameof(databaseCommands));
+            }
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
 
             var revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
 
-	        return databaseCommands.DeleteAsync(revisionDocId, etag, ct);
-	    }
-	}
+            return databaseCommands.DeleteAsync(revisionDocId, etag, ct);
+        }
+    }
 }

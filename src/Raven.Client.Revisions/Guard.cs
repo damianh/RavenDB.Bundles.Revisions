@@ -1,4 +1,5 @@
 ﻿#region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="Guard.cs">
 // 	Copyright © 2012 Damian Hickey
@@ -18,23 +19,21 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
-#endregion
 
+#endregion
 
 namespace Raven.Client.Revisions
 {
-	using System;
-	using System.Diagnostics.Contracts;
+    using System;
 
-	internal static class Guard
-	{
-		internal static void Against(bool condition, Func<Exception> exceptionFactory)
-		{
-			Contract.Requires(exceptionFactory != null);
-			if (condition)
-			{
-				throw exceptionFactory();
-			}
-		}
-	}
+    internal static class Guard
+    {
+        internal static void Against(bool condition, Func<Exception> exceptionFactory)
+        {
+            if (condition)
+            {
+                throw exceptionFactory();
+            }
+        }
+    }
 }

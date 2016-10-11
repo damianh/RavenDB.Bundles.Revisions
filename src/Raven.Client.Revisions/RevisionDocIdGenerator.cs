@@ -1,4 +1,5 @@
 ﻿#region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="IDocumentSessionExtensions.cs">
 // 	Copyright © 2012 Damian Hickey
@@ -18,15 +19,16 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
+
 #endregion
 
 namespace Raven.Client.Revisions
 {
-	public static class RevisionDocIdGenerator
-	{
-		public static string GetId(string id, int revision)
-		{
-			return id + "/revision/" + revision;
-		}
-	}
+    public static class RevisionDocIdGenerator
+    {
+        public static string GetId(string id, int revision)
+        {
+            return id + "/revision/" + revision;
+        }
+    }
 }

@@ -1,4 +1,5 @@
 #region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="RevisionDocumentPutTrigger.cs">
 // 	Copyright © 2012 Damian Hickey
@@ -18,26 +19,29 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
+
 #endregion
 
 namespace Raven.Bundles.Revisions
 {
-	using Abstractions.Data;
-	using Database.Plugins;
-	using Json.Linq;
+    using Raven.Abstractions.Data;
+    using Raven.Database.Plugins;
+    using Raven.Json.Linq;
 
-	public class HideRevisionDocumentsFromIndexingReadTrigger : AbstractReadTrigger
-	{
-		public override ReadVetoResult AllowRead(string key,
-		                                         RavenJObject metadata,
-		                                         ReadOperation operation,
-		                                         TransactionInformation transactionInformation)
-		{
-			if (operation != ReadOperation.Index)
-			{
-				return ReadVetoResult.Allowed;
-			}
-			return key.Contains(RevisionDocumentPutTrigger.RevisionSegment) ? ReadVetoResult.Ignore : ReadVetoResult.Allowed;
-		}
-	}
+    public class HideRevisionDocumentsFromIndexingReadTrigger : AbstractReadTrigger
+    {
+        public override ReadVetoResult AllowRead(string key,
+            RavenJObject metadata,
+            ReadOperation operation,
+            TransactionInformation transactionInformation)
+        {
+            if (operation != ReadOperation.Index)
+            {
+                return ReadVetoResult.Allowed;
+            }
+            return key.Contains(RevisionDocumentPutTrigger.RevisionSegment)
+                ? ReadVetoResult.Ignore
+                : ReadVetoResult.Allowed;
+        }
+    }
 }

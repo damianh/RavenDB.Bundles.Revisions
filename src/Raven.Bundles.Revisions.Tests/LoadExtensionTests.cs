@@ -1,4 +1,5 @@
 ﻿#region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="LoadExtensionTests.cs">
 // Copyright © 2012 Damian Hickey
@@ -18,25 +19,24 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
-#endregion
 
-using System.Threading;
-using System.Threading.Tasks;
+#endregion
 
 namespace Tests.Raven.Bundles.Revisions
 {
-	using System;
-	using Xunit;
-	using global::Raven.Client;
-	using global::Raven.Client.Revisions;
+    using System;
+    using System.Threading.Tasks;
+    using global::Raven.Client;
+    using global::Raven.Client.Revisions;
+    using Xunit;
 
-	public class LoadExtensionTests
-	{
-		[Fact]
-		public Task When_session_is_null_Then_should_throw()
-		{
-			IAsyncDocumentSession session = null;
-			return Assert.ThrowsAsync<ArgumentNullException>(() => session.LoadRevision<RevisionedDocument>("key", 1));
-		}
-	}
+    public class LoadExtensionTests
+    {
+        [Fact]
+        public Task When_session_is_null_Then_should_throw()
+        {
+            IAsyncDocumentSession session = null;
+            return Assert.ThrowsAsync<ArgumentNullException>(() => session.LoadRevision<RevisionedDocument>("key", 1));
+        }
+    }
 }

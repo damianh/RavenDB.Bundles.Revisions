@@ -1,4 +1,5 @@
 #region CopyrightAndLicence
+
 // --------------------------------------------------------------------------------------------------------------------
 // <Copyright company="Damian Hickey" file="RevisionedDocument.cs">
 // 	Copyright © 2012 Damian Hickey
@@ -18,16 +19,17 @@
 // SOFTWARE.
 // </Copyright>
 //  --------------------------------------------------------------------------------------------------------------------
+
 #endregion
 
 namespace Tests.Raven.Bundles.Revisions
 {
-	public class RevisionedDocument
-	{
-		public string Id { get; set; }
+    public class RevisionedDocument
+    {
+        public string Id { get; set; }
 
-		public int Revision { get; set; }
+        public int Revision { get; set; }
 
-		public string Data { get; set; }
-	}
+        public string Data { get; set; }
+    }
 }
