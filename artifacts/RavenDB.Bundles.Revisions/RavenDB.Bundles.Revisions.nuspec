@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>RavenDB.Bundles.Revisions</id>
+		<version>1.1</version>
+		<title>RavenDB Revisions Bundle</title>
+		<authors>Damian Hickey</authors>
+		<description>Revisions automatically stores previous versions of revisionable documents. This packages contains the database plugin. RavenDB.Bundles.Revisions is a 3rd party bundle and not offically supported by Hibernating Rhinos.</description>
+		<language>en-US</language>
+		<licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
+		<projectUrl>https://github.com/damianh/RavenDB.Bundles.Revisions</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<tags>nosql ravendb raven document database client bundles</tags>
+		<dependencies>
+			<dependency id="RavenDB.Database" version="(3.0,)"/>
+		</dependencies>
+		<iconUrl>http://static.ravendb.net/logo-for-nuget.png</iconUrl>
+	</metadata>
+</package>

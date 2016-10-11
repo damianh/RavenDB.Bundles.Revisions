@@ -9,3 +9,4 @@ src/packages/
 *.dotCover
 build/
 _NCrunch_*
+artrifacts

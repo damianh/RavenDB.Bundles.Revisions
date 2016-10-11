@@ -38,7 +38,7 @@ namespace Tests.Raven.Bundles.Revisions
         {
             _documentStore = new EmbeddableDocumentStore
             {
-                RunInMemory = true
+                RunInMemory = true,
             };
 
             _documentStore.Initialize();

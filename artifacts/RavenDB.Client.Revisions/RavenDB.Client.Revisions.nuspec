@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>RavenDB.Client.Revisions</id>
-		<version>1.0</version>
+		<version>1.1</version>
 		<title>RavenDB Client for the Revisions bundle</title>
 		<authors>Damian Hickey</authors>
 		<description>RavenDB Revisions bundle client extends the RavenDB client to allow retrieval and deletion of revision documents. RavenDB.Client.Revisions is a 3rd party bundle and not offically supported by Hibernating Rhinos.</description>
@@ -12,7 +12,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<tags>nosql ravendb raven document database client bundles</tags>
 		<dependencies>
-			<dependency id="RavenDB.Client" version="" />
+			<dependency id="RavenDB.Client" version="(3.0,)" />
 		</dependencies>
 		<iconUrl>http://static.ravendb.net/logo-for-nuget.png</iconUrl>
 	</metadata>
