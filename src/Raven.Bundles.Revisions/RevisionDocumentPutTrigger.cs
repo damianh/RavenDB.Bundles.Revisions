@@ -33,7 +33,8 @@ namespace Raven.Bundles.Revisions
     {
         internal const string RevisionSegment = "/revision/";
 
-        public override VetoResult AllowPut(string key,
+        public override VetoResult AllowPut(
+            string key,
             RavenJObject document,
             RavenJObject metadata,
             TransactionInformation transactionInformation)
@@ -43,7 +44,8 @@ namespace Raven.Bundles.Revisions
                 : VetoResult.Allowed;
         }
 
-        public override void OnPut(string key,
+        public override void OnPut(
+            string key,
             RavenJObject document,
             RavenJObject metadata,
             TransactionInformation transactionInformation)
@@ -57,11 +59,10 @@ namespace Raven.Bundles.Revisions
             using (Database.DisableAllTriggersForCurrentThread())
             {
                 var revisionCopy = new RavenJObject(document);
+                var revisionKey  = $"{key}{RevisionSegment}{versionToken.Value<int>()}";
 
-                var revisionkey = key + RevisionSegment + versionToken.Value<int>();
-
-                Database.TransactionalStorage.Batch(
-                    storage => storage.Documents.AddDocument(revisionkey, null, revisionCopy, metadata));
+                Database.TransactionalStorage.Batch(storage => 
+                    storage.Documents.AddDocument(revisionKey, null, revisionCopy, metadata));
             }
         }
     }

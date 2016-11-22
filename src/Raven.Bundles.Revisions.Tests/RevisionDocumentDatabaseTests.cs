@@ -90,8 +90,10 @@ namespace Tests.Raven.Bundles.Revisions
 
             using (var session = _documentStore.OpenAsyncSession())
             {
-                var myVersionedDocuments =
-                    await session.Query<RevisionedDocument>().Customize(q => q.WaitForNonStaleResults()).ToListAsync();
+                var myVersionedDocuments = await session
+                    .Query<RevisionedDocument>()
+                    .Customize(q => q.WaitForNonStaleResults())
+                    .ToListAsync();
 
                 Assert.Equal(1, myVersionedDocuments.Count);
                 Assert.Equal("key", myVersionedDocuments[0].Id);

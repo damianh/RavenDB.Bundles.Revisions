@@ -30,18 +30,17 @@ namespace Raven.Bundles.Revisions
 
     public class HideRevisionDocumentsFromIndexingReadTrigger : AbstractReadTrigger
     {
-        public override ReadVetoResult AllowRead(string key,
+        public override ReadVetoResult AllowRead(
+            string key,
             RavenJObject metadata,
             ReadOperation operation,
             TransactionInformation transactionInformation)
         {
-            if (operation != ReadOperation.Index)
-            {
-                return ReadVetoResult.Allowed;
-            }
-            return key.Contains(RevisionDocumentPutTrigger.RevisionSegment)
-                ? ReadVetoResult.Ignore
-                : ReadVetoResult.Allowed;
+            return operation != ReadOperation.Index
+                ? ReadVetoResult.Allowed
+                : (key.Contains(RevisionDocumentPutTrigger.RevisionSegment)
+                    ? ReadVetoResult.Ignore
+                    : ReadVetoResult.Allowed);
         }
     }
 }
