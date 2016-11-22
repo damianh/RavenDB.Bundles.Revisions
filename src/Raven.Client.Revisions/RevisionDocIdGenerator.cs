@@ -26,9 +26,6 @@ namespace Raven.Client.Revisions
 {
     public static class RevisionDocIdGenerator
     {
-        public static string GetId(string id, int revision)
-        {
-            return id + "/revision/" + revision;
-        }
+        public static string GetId(string id, int revision) => $"{id}/revision/{revision}";
     }
 }

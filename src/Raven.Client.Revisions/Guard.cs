@@ -30,10 +30,7 @@ namespace Raven.Client.Revisions
     {
         internal static void Against(bool condition, Func<Exception> exceptionFactory)
         {
-            if (condition)
-            {
-                throw exceptionFactory();
-            }
+            if (condition) throw exceptionFactory();
         }
     }
 }

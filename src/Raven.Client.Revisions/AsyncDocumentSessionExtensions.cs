@@ -1,8 +1,8 @@
-#region CopyrightAndLicence
+﻿#region CopyrightAndLicence
 
 // --------------------------------------------------------------------------------------------------------------------
-// <Copyright company="Damian Hickey" file="IDatabaseCommandsExtensions.cs">
-// 	Copyright � 2012 Damian Hickey
+// <Copyright company="Damian Hickey" file="AsyncDocumentSessionExtensions.cs">
+// 	Copyright © 2012 Damian Hickey
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -27,25 +27,20 @@ namespace Raven.Client.Revisions
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Raven.Client.Connection.Async;
 
-    public static class IDatabaseCommandsExtensions
+    public static class AsyncDocumentSessionExtensions
     {
-        public static Task DeleteRevision(this IAsyncDatabaseCommands databaseCommands, string id, int revision,
-            Guid? etag = default(Guid?), CancellationToken ct = default(CancellationToken))
+        public static Task<T> LoadRevision<T>(this IAsyncDocumentSession session,
+            string id,
+            int revision,
+            CancellationToken ct = default(CancellationToken))
         {
-            if (databaseCommands == null)
-            {
-                throw new ArgumentNullException(nameof(databaseCommands));
-            }
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            if (session == null) throw new ArgumentNullException(nameof(session));
+            if (id == null) throw new ArgumentNullException(nameof(id));
 
             var revisionDocId = RevisionDocIdGenerator.GetId(id, revision);
 
-            return databaseCommands.DeleteAsync(revisionDocId, etag, ct);
+            return session.LoadAsync<T>(revisionDocId, ct);
         }
     }
 }
