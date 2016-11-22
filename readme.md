@@ -9,7 +9,7 @@ A RavenDB plugin and client that automatically maintains previous versions of a 
 * Your application controls the Revision number and not the plugin.
 * Your application is resposible for revision number contiguity.
 
-While Raven's 'Versioning' bundle is designed for regulatad environments, such as healtcare, where nothing can be deleted, this bundle is more useful for applications where the document is a result of a projection (i.e. CQRS) and where the 'source of truth' comes from somewhere else and where projections / documents can easily be rebuilt.
+While Raven's 'Versioning' bundle is designed for regulated environments, such as healtcare, where nothing can be deleted, this bundle is more useful for applications where the document is a result of a projection (i.e. CQRS) and where the 'source of truth' comes from somewhere else and where projections / documents can easily be rebuilt.
 
 
 
