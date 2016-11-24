@@ -4,7 +4,7 @@ properties {
 	$srcDir = "$baseDir\src"
 	$sln = "$baseDir\src\RavenDB.Bundles.Revisions.sln"
 	$xunitPath = FindTool("xunit.runner.console.*\tools\xunit.console.exe")
-	$version = "1.1.0"
+	$version = "2.0.0"
 	$buildNumber = 0
 }
 
